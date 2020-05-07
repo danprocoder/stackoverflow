@@ -7,5 +7,4 @@ router.post('/signup', userController.addNewUser);
 
 router.post('/auth', userController.authenticateUser);
 
-
 export default router;

@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import bearerToken from 'express-bearer-token';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -33,6 +34,7 @@ mongoose
  * Handle CORS
  * --------------------------------------------------
  */
+app.use(bearerToken());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
