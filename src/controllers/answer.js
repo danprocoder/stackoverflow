@@ -21,25 +21,11 @@ export default {
   },
 
   async getQuestionAnswers(req, res) {
-    const { questionId } = req.params;
-
-    const answers =  await Answer
-      .aggregate([
-        {
-          '$match': {
-            question: mongoose.Types.ObjectId(questionId)
-          }
-        },
-        {
-          '$lookup': {
-            from: 'users',
-            localField: 'user',
-            foreignField: '_id',
-            as: 'user'
-          }
-        }
-      ])
-      .exec();
+    const answers = await Answer
+      .find({
+        question: mongoose.Types.ObjectId(req.params.questionId)
+      })
+      .populate('user');
 
     res.status(200).json({
       message: `${answers.length} answers found for question.`,

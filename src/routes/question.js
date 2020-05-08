@@ -8,7 +8,7 @@ route.post('/', checkAuthToken, questionController.create);
 route.get('/', checkAuthToken, questionController.getAll);
 route.get('/:id', checkAuthToken, questionController.getOne);
 
-route.get('/:id/upvote', checkAuthToken, questionController.upvote);
-route.get('/:id/downvote', checkAuthToken, questionController.downvote);
+route.put('/:id/upvote', checkAuthToken, questionController.upvote);
+route.put('/:id/downvote', checkAuthToken, questionController.downvote);
 
 export default route;
