@@ -44,10 +44,10 @@ export default {
       .aggregate([
         {
           '$lookup': {
-            "from": "users",
-            "localField": "user",
-            "foreignField": "_id",
-            "as": "user"
+            'from': 'users',
+            'localField': 'user',
+            'foreignField': '_id',
+            'as': 'user'
           }
         },
         {
@@ -73,5 +73,13 @@ export default {
           message: 'Question not found'
         });
       });
+  },
+
+  upvote(req, res) {
+
+  },
+
+  downvote(req, res) {
+
   }
 };

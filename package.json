@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "",
+    "start": "node build/server.js",
     "start-dev": "nodemon --exec babel-node src/server.js",
     "build": "",
-    "test": "npm test"
+    "test": "NODE_ENV=test && npm test"
   },
   "author": "Daniel Austin",
   "license": "ISC",
