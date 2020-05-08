@@ -20,16 +20,8 @@ export default {
 
   getAll(req, res) {
     Question
-      .aggregate([
-        {
-          "$lookup": {
-            "from": "users",
-            "localField": "user",
-            "foreignField": "_id",
-            "as": "user"
-          }
-        }
-      ])
+      .find()
+      .populate('user')
       .then(data => {
         res.status(200)
           .json({
@@ -41,23 +33,10 @@ export default {
 
   getOne(req, res) {
     Question
-      .aggregate([
-        {
-          '$lookup': {
-            'from': 'users',
-            'localField': 'user',
-            'foreignField': '_id',
-            'as': 'user'
-          }
-        },
-        {
-          '$match': {
-            '_id': mongoose.Types.ObjectId(req.params.id)
-          }
-        }
-      ])
+      .findById(req.params.id)
+      .populate('user')
       .then(question => {
-        if (question.length === 0) {
+        if (!question) {
           return res.status(404).json({
             message: 'Question not found'
           });
@@ -65,7 +44,7 @@ export default {
 
         res.status(200).json({
           message: 'Question found',
-          data: question[0]
+          data: question
         });
       })
       .catch(() => {
@@ -75,11 +54,43 @@ export default {
       });
   },
 
-  upvote(req, res) {
+  async upvote(req, res) {
+    const question = await Question.findById(req.params.id);
 
+    const voteStatus = question.votes.find(item => item.user.equals(req.currentUser._id));
+    if (!voteStatus) {
+      question.votes.push({
+        user: mongoose.Types.ObjectId(req.currentUser._id),
+        upvote: true
+      });
+    } else {
+      voteStatus.upvote = true;
+    }
+    await question.save();
+
+    res.status(200).json({
+      message: 'Question upvoted',
+      data: question
+    });
   },
 
-  downvote(req, res) {
+  async downvote(req, res) {
+    const question = await Question.findById(req.params.id);
 
+    const voteStatus = question.votes.find(item => item.user.equals(req.currentUser._id));
+    if (!voteStatus) {
+      question.votes.push({
+        user: mongoose.Types.ObjectId(req.currentUser._id),
+        upvote: false
+      });
+    } else {
+      voteStatus.upvote = false;
+    }
+    await question.save();
+
+    res.status(200).json({
+      message: 'Question downvoted',
+      data: question
+    })
   }
 };
