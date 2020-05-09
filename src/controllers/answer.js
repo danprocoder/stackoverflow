@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
+import { validationResult } from 'express-validator';
 import { Answer } from '../models';
 
 export default {
   answerQuestion(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     const { answer } = req.body;
 
     Answer
