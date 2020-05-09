@@ -49,7 +49,7 @@ export default {
       .populate('question')
       .populate('user');
     
-    res.json({
+    res.send({
       message: `${result.length} answers found`,
       data: result
     });
