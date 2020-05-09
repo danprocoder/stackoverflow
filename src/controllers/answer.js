@@ -22,7 +22,7 @@ export default {
   async getQuestionAnswers(req, res) {
     const answers = await Answer
       .find({
-        question: mongoose.Types.ObjectId(req.currentQuestion._idd)
+        question: mongoose.Types.ObjectId(req.currentQuestion._id)
       })
       .populate('user');
 
