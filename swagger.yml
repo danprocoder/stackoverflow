@@ -1,0 +1,256 @@
+swagger: '2.0'
+info:
+  description: This is the API documentation for a simplified version of stackoverflow
+  version: 1.0.0
+  title: Stackoverflow
+  contact:
+    email: danielaustin718@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /user/signup:
+    post:
+      tags:
+      - Users
+      summary: Creates a new user
+      description: |
+        Endpoint create a new user
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - in: formData
+        name: displayName
+        type: string
+        required: true
+      - in: formData
+        name: email
+        type: string
+        required: true
+      - in: formData
+        name: password
+        type: string
+        required: true
+      responses:
+        201:
+          description: User account created successfully
+        401:
+          description: bad input parameter
+  /user/auth:
+    post:
+      tags:
+      - Users
+      summary: Authenticates a user
+      description: |
+        Authenticates a user
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: password
+        type: string
+        required: true
+      responses:
+        200:
+          description: User authenticated successfully
+        401:
+          description: bad input parameter
+  
+  /question:
+    post:
+      tags:
+        - Questions
+      summary: Post a new question
+      description: Post a new question
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+      - in: formData
+        name: title
+        type: string
+        required: true
+      - in: formData
+        name: body
+        type: string
+        required: true
+      responses:
+        201:
+          description: User authenticated successfully
+        401:
+          description: bad input parameter
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - Questions
+      summary: Get all questions
+      description: Get all questions created on the platform
+      produces:
+        - application/json
+      responses:
+        200:
+          description: User authenticated successfully
+        401:
+          description: bad input parameter
+  
+  /question/{id}:
+    get:
+      tags:
+        - Questions
+      summary: Get a specific question
+      description: Get a specific question by ID.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Question ID
+          required: true
+      responses:
+        200:
+          description: User authenticated successfully
+        401:
+          description: bad input parameter
+
+  /question/{id}/upvote:
+    put:
+      tags:
+        - Questions
+      summary: Upvote a question
+      description: Upvote a question
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Question ID
+          required: true
+      responses:
+        200:
+          description: User authenticated successfully
+        401:
+          description: bad input parameter
+      security:
+        - bearerAuth: []
+
+  /question/{id}/downvote:
+    put:
+      tags:
+        - Questions
+      summary: Downvote a question
+      description: Downvote a question
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Question ID
+          type: string
+          required: true
+      responses:
+        200:
+          description: User authenticated successfully
+        401:
+          description: bad input parameter
+      security:
+        - bearerAuth: []
+
+  /question/{id}/answer:
+    post:
+      tags:
+        - Answers
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: Question ID
+          required: true
+        - in: formData
+          name: answer
+          type: string
+          required: true
+      responses:
+        201:
+          description: Answer posted successfully
+        401:
+          description: bad input parameter
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - Answers
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Question ID
+          type: string
+          required: true
+      responses:
+        200:
+          description: Answers retrieved successfully
+        401:
+          description: bad input parameter
+
+  /search/question:
+    get:
+      tags:
+        - Search
+      responses:
+        200:
+          description: Search results found
+        401:
+          description: bad input parameter
+
+  /search/user:
+    get:
+      tags:
+        - Search
+      responses:
+        200:
+          description: Search results found
+        401:
+          description: bad input parameter
+
+  /search/answer:
+    get:
+      tags:
+        - Search
+      responses:
+        200:
+          description: Search results found
+        401:
+          description: bad input parameter
+
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: |
+      Value should be in the format: Bearer <jwt-token>
+
+schemes:
+ - https
+
+host: daniel-stackoverflow-api.herokuapp.com
+basePath: /api/v1
