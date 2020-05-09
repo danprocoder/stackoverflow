@@ -8,7 +8,11 @@ export default async (req, res, next) => {
     return res.status(401).json({ message: 'Authorization bearer token required' });
   }
 
-  const { _id } = jwt.decode(req.token, process.env.JWT_SECRET_KEY);
+  const decoded = jwt.decode(req.token, process.env.JWT_SECRET_KEY);
+  if (!decoded) {
+    return res.status(401).json({ message: 'Authorization bearer token required' });
+  }
+  const { _id } = decoded;
   const user = await User.findById(_id);
   if (!user) {
     return res.status(401).json({ message: 'Invalid authorization token' });
