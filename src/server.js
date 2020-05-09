@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import bearerToken from 'express-bearer-token';
@@ -49,6 +50,16 @@ app.use('/api/v1/', routes);
 app.get('/', (req, res) => {
   res.send({ message: 'Welcome to stackoverflow clone' });
 });
+
+/*
+ * --------------------------------------------------
+ * API Documentation
+ * --------------------------------------------------
+ */
+app.get('/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'docs/index.html'));
+});
+app.use(express.static(path.join(__dirname, '..', 'docs')));
 
 /*
  * --------------------------------------------------
