@@ -1,4 +1,4 @@
-import { User, Question } from '../models';
+import { User, Question, Answer } from '../models';
 
 export default {
   async searchQuestions(req, res) {
@@ -13,23 +13,45 @@ export default {
       })
       .populate('user');
     
-    res.status(200).json({
-      message: `${result.length} results found`,
+    res.send({
+      message: `${result.length} questions found for query`,
       data: result
     });
   },
 
-  searchUsers(req, res) {
+  async searchUsers(req, res) {
     const { query } = req.query;
 
-    User.find({
-      displayName: {
-        $regex: query
-      }
-    })
+    const result = await User
+      .find({
+        displayName: {
+          $regex: query,
+          $options: 'i'
+        }
+      });
+
+    res.send({
+      message: `${result.length} users found for query`,
+      data: result
+    });
   },
 
-  searchAnswer(req, res) {
+  async searchAnswer(req, res) {
     const { query } = req.query;
+
+    const result = await Answer
+      .find({
+        answer: {
+          $regex: query,
+          $options: 'i'
+        }
+      })
+      .populate('question')
+      .populate('user');
+    
+    res.json({
+      message: `${result.length} answers found`,
+      data: result
+    });
   }
 };
