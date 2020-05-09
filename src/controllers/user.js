@@ -1,9 +1,15 @@
+import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { User } from '../models';
 
 export default {
   addNewUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     const { displayName, email, password } = req.body;
 
     User.create({ displayName, email, password })
@@ -18,6 +24,11 @@ export default {
   },
 
   async authenticateUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });

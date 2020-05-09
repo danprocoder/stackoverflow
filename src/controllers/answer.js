@@ -1,14 +1,19 @@
 import mongoose from 'mongoose';
+import { validationResult } from 'express-validator';
 import { Answer } from '../models';
 
 export default {
   answerQuestion(req, res) {
-    const { questionId } = req.params;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     const { answer } = req.body;
 
     Answer
       .create({
-        question: mongoose.Types.ObjectId(questionId),
+        question: mongoose.Types.ObjectId(req.currentQuestion._id),
         user: mongoose.Types.ObjectId(req.currentUser._id),
         answer
       })
@@ -23,7 +28,7 @@ export default {
   async getQuestionAnswers(req, res) {
     const answers = await Answer
       .find({
-        question: mongoose.Types.ObjectId(req.params.questionId)
+        question: mongoose.Types.ObjectId(req.currentQuestion._id)
       })
       .populate('user');
 
