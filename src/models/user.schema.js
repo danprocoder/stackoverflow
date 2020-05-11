@@ -21,7 +21,7 @@ const UserSchema = new Schema(
   }
 );
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function(next) {
   let user = this;
   if (!user.isModified('password')) return next();
 
@@ -34,6 +34,13 @@ UserSchema.pre('save', function (next) {
     .catch(err => {
       return err;
     });
+});
+
+UserSchema.set('toJSON', {
+  transform: function(doc, ret) {
+      delete ret.password;
+      return ret;
+  }
 });
 
 const User = mongoose.model('users', UserSchema);
